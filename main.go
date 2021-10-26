@@ -17,7 +17,7 @@ import (
 
 type config struct {
 	PrivateToken  string `env:"private_token,required"`
-	RepositoryURL string `env:"repository_url,required"`
+	ProjectID     string `env:"gitlab_project_id,required"`
 	GitRef        string `env:"git_ref"`
 	CommitHash    string `env:"commit_hash,required"`
 	APIURL        string `env:"api_base_url,required"`
@@ -27,15 +27,6 @@ type config struct {
 	Context     string  `env:"context"`
 	Description string  `env:"description"`
 	Coverage    float64 `env:"coverage,range[0.0..100.0]"`
-}
-
-// getRepo parses the repository from a url
-func getRepo(u string) string {
-	r := regexp.MustCompile(`(?::\/\/[^/]+?\/|[^:/]+?:)([^/]+?\/.+?)(?:\.git)?\/?$`)
-	if matches := r.FindStringSubmatch(u); len(matches) == 2 {
-		return matches[1]
-	}
-	return ""
 }
 
 func getState(preset string) string {
@@ -58,7 +49,7 @@ func getDescription(desc, state string) string {
 // sendStatus creates a commit status for the given commit.
 // see also: https://docs.gitlab.com/ce/api/commits.html#post-the-build-status-to-a-commit
 func sendStatus(cfg config) error {
-	repo := url.PathEscape(getRepo(cfg.RepositoryURL))
+	repo := cfg.ProjectID
 	form := url.Values{
 		"state":       {getState(cfg.Status)},
 		"target_url":  {cfg.TargetURL},
