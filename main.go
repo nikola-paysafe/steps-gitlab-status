@@ -17,7 +17,6 @@ import (
 type config struct {
 	PrivateToken   string `env:"private_token,required"`
 	ProjectID      string `env:"gitlab_project_id,required"`
-	GitRef         string `env:"git_ref"`
 	CommitHash     string `env:"commit_hash,required"`
 	PipelineID     string `env:"gitlab_pipeline_id,required"`
 	APIURL         string `env:"api_base_url,required"`
@@ -57,10 +56,6 @@ func sendStatus(cfg config) error {
 		"context":     {cfg.Context},
 		"coverage":    {fmt.Sprintf("%f", cfg.Coverage)},
 		"pipeline_id": {cfg.PipelineID},
-	}
-
-	if strings.TrimSpace(cfg.GitRef) != "" {
-		form["ref"] = []string{strings.TrimSpace(cfg.GitRef)}
 	}
 
 	url := fmt.Sprintf("%s/projects/%s/statuses/%s", cfg.APIURL, repo, cfg.CommitHash)
