@@ -67,6 +67,13 @@ inputs:
         4. Click on **Create personal access token** and save your new token.
       is_required: true
       is_sensitive: true
+  - gitlab_pipeline_id: "$GITLAB_PIPELINE_ID"
+    opts:
+      title: "Pipeline ID"
+      summary: ""
+      description: |-
+        The id of the gitlab pipeline we want to update
+      is_required: true
   - gitlab_project_id: "$GITLAB_PROJECT_ID"
     opts:
       title: "Project ID"

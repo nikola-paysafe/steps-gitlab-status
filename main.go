@@ -15,11 +15,12 @@ import (
 )
 
 type config struct {
-	PrivateToken  string `env:"private_token,required"`
-	ProjectID     string `env:"gitlab_project_id,required"`
-	GitRef        string `env:"git_ref"`
-	CommitHash    string `env:"commit_hash,required"`
-	APIURL        string `env:"api_base_url,required"`
+	PrivateToken   string `env:"private_token,required"`
+	ProjectID      string `env:"gitlab_project_id,required"`
+	GitRef         string `env:"git_ref"`
+	CommitHash     string `env:"commit_hash,required"`
+	PipelineID     string `env:"gitlab_pipeline_id,required"`
+	APIURL         string `env:"api_base_url,required"`
 
 	Status      string  `env:"preset_status,opt[auto,pending,running,success,failed,canceled]"`
 	TargetURL   string  `env:"target_url"`
@@ -55,6 +56,7 @@ func sendStatus(cfg config) error {
 		"description": {getDescription(cfg.Description, cfg.Status)},
 		"context":     {cfg.Context},
 		"coverage":    {fmt.Sprintf("%f", cfg.Coverage)},
+		"pipeline_id": {cfg.PipelineID},
 	}
 
 	if strings.TrimSpace(cfg.GitRef) != "" {
